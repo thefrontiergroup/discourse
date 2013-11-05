@@ -22,8 +22,6 @@ dump.rdb
 
 /public/assets/*
 
-config/database.yml
-config/redis.yml
 config/discourse.pill
 config/environments/production.rb
 
@@ -87,7 +85,5 @@ config/version.rb
 
 # ignore the Ruby Version manager (rvm)
 .rvmrc
-.ruby-version
-.ruby-gemset
 .rbenv
 bundler_stubs/*
