@@ -118,6 +118,10 @@ gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security
 
+# Deploy with Capistrano
+gem 'rvm', ">= 1.11.3.0", require: nil
+gem 'tfg_cap', require: nil, git: 'git@github.com:thefrontiergroup/tfg-cap.git' 
+
 # Gem that enables support for plugins. It is required.
 gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 
