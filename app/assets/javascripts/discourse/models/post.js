@@ -155,7 +155,7 @@ Discourse.Post = Discourse.Model.extend({
       return Discourse.ajax("/posts/" + (this.get('id')), {
         type: 'PUT',
         data: {
-          post: { raw: this.get('raw') },
+          post: { raw: this.get('raw'), edit_reason: this.get('editReason') },
           image_sizes: this.get('imageSizes')
         }
       }).then(function(result) {
@@ -180,7 +180,7 @@ Discourse.Post = Discourse.Model.extend({
         title: this.get('title'),
         image_sizes: this.get('imageSizes'),
         target_usernames: this.get('target_usernames'),
-        auto_close_days: this.get('auto_close_days')
+        auto_close_time: Discourse.Utilities.timestampFromAutocloseString(this.get('auto_close_time'))
       };
 
       var metaData = this.get('metaData');
@@ -361,7 +361,9 @@ Discourse.Post = Discourse.Model.extend({
   }.property('reply_count'),
 
   canViewEditHistory: function() {
-    return (Discourse.SiteSettings.edit_history_visible_to_public || (Discourse.User.current() && Discourse.User.current().get('staff')));
+    return (Discourse.SiteSettings.edit_history_visible_to_public ||
+            (Discourse.User.current() &&
+              (Discourse.User.current().get('staff') || Discourse.User.current().get('id') === this.get('user_id'))));
   }.property()
 
 });

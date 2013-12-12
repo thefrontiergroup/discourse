@@ -48,7 +48,7 @@ Discourse.AdminUser = Discourse.User.extend({
         user.set('can_delete_all_posts', true);
       }
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("admin.user.delete_all_posts"),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("admin.user.delete_all_posts"),
       "class": "btn btn-danger",
       "callback": function() {
         Discourse.ajax("/admin/users/" + (user.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
@@ -133,31 +133,31 @@ Discourse.AdminUser = Discourse.User.extend({
     this.set('trustLevel.id', this.get('originalTrustLevel'));
   },
 
-  isBanned: Em.computed.equal('is_banned', true),
-  canBan: Em.computed.not('staff'),
+  isSuspended: Em.computed.equal('suspended', true),
+  canSuspend: Em.computed.not('staff'),
 
-  banDuration: function() {
-    var banned_at = moment(this.banned_at);
-    var banned_till = moment(this.banned_till);
-    return banned_at.format('L') + " - " + banned_till.format('L');
-  }.property('banned_till', 'banned_at'),
+  suspendDuration: function() {
+    var suspended_at = moment(this.suspended_at);
+    var suspended_till = moment(this.suspended_till);
+    return suspended_at.format('L') + " - " + suspended_till.format('L');
+  }.property('suspended_till', 'suspended_at'),
 
-  ban: function(duration, reason) {
-    return Discourse.ajax("/admin/users/" + this.id + "/ban", {
+  suspend: function(duration, reason) {
+    return Discourse.ajax("/admin/users/" + this.id + "/suspend", {
       type: 'PUT',
       data: {duration: duration, reason: reason}
     });
   },
 
-  unban: function() {
-    Discourse.ajax("/admin/users/" + this.id + "/unban", {
+  unsuspend: function() {
+    Discourse.ajax("/admin/users/" + this.id + "/unsuspend", {
       type: 'PUT'
     }).then(function() {
       // succeeded
       window.location.reload();
     }, function(e) {
       // failed
-      var error = I18n.t('admin.user.unban_failed', { error: "http: " + e.status + " - " + e.body });
+      var error = I18n.t('admin.user.unsuspend_failed', { error: "http: " + e.status + " - " + e.body });
       bootbox.alert(error);
     });
   },
@@ -283,13 +283,13 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_dont_block'),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_dont_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(false);
       }
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t('admin.user.delete_and_block'),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t('admin.user.delete_and_block'),
       "class": "btn",
       "callback": function(){
         performDestroy(true);
@@ -307,7 +307,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": '<i class="icon icon-warning-sign"></i> ' + I18n.t("flagging.yes_delete_spammer"),
+      "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("flagging.yes_delete_spammer"),
       "class": "btn btn-danger",
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {

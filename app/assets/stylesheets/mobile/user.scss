@@ -61,7 +61,7 @@
     border-left: 0;
     border-right: 0;
   }
-  .summary {
+  .map {
     height: 50px;
   }
   .avatar {
@@ -84,23 +84,6 @@
       font-size: 14px;
       color: #999999;
       cursor: pointer;
-    }
-  }
-}
-
-#no-invites {
-  padding: 10px;
-}
-
-#invited-users {
-  h2 {
-    color: $darkish_gray;
-    font-size: 20px;
-  }
-  .invites {
-    margin-bottom: 20px;
-    tr {
-      height: 45px;
     }
   }
 }
@@ -160,7 +143,7 @@
       margin-top: 0px;
       padding: 10px 10px 0 10px;
 
-      .btn { 
+      .btn {
         margin-bottom: 10px;
         float: none;
       }
@@ -258,7 +241,7 @@
   .avatar-link {
     float: none;
   }
-  .icon {
+  .fa {
     width: 15px;
     display: inline-block;
     color: #777;

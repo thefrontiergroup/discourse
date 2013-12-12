@@ -14,12 +14,15 @@ class ScreenedIpAddress < ActiveRecord::Base
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
 
-  # @Neil please review, in rails 4 when setting an ip address attribute a conversion takes place
-  #  this may explode meaning you will never even reach the validator
-  # We can work around the issue like so, but I wonder if the spec is valid
+  # In Rails 4.0.0, validators are run to handle invalid assignments to inet columns (as they should).
+  # In Rails 4.0.1, an exception is raised before validation happens, so we need this hack for
+  # inet/cidr columns:
   def ip_address=(val)
     write_attribute(:ip_address, val)
-  rescue IPAddr::InvalidAddressError
+
+  # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
+  # handle both exceptions
+  rescue ArgumentError, IPAddr::InvalidAddressError
     self.errors.add(:ip_address, :invalid)
   end
 
@@ -47,3 +50,21 @@ class ScreenedIpAddress < ActiveRecord::Base
     !!b and b.action_type == action_type
   end
 end
+
+# == Schema Information
+#
+# Table name: screened_ip_addresses
+#
+#  id            :integer          not null, primary key
+#  ip_address    :inet             not null
+#  action_type   :integer          not null
+#  match_count   :integer          default(0), not null
+#  last_match_at :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_screened_ip_addresses_on_ip_address     (ip_address) UNIQUE
+#  index_screened_ip_addresses_on_last_match_at  (last_match_at)
+#

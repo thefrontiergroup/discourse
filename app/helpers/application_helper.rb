@@ -19,10 +19,6 @@ module ApplicationHelper
     end
   end
 
-  def html_classes
-    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'}"
-  end
-
   def escape_unicode(javascript)
     if javascript
       javascript = javascript.dup.force_encoding("utf-8")
@@ -112,20 +108,15 @@ module ApplicationHelper
   end
 
   def login_path
-    return "#{Discourse::base_uri}/login"
+    "#{Discourse::base_uri}/login"
   end
 
-  def mobile_view?
-    return false unless SiteSetting.enable_mobile_theme
-    if session[:mobile_view]
-      session[:mobile_view] == '1'
-    else
-      mobile_device?
-    end
+  def stylesheet_filenames(target=:desktop)
+    [asset_path("#{target}.css"), customization_disabled? ? nil : SiteCustomization.custom_stylesheet_path(session[:preview_style], target)].compact
   end
 
-  def mobile_device?
-    # TODO: this is dumb. user agent matching is a doomed approach. a better solution is coming.
-    request.user_agent =~ /Mobile|webOS|Nexus 7/ and !(request.user_agent =~ /iPad/)
+  def customization_disabled?
+    controller.class.name.split("::").first == "Admin" || session[:disable_customization]
   end
+
 end
